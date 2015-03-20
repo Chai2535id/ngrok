@@ -6,6 +6,7 @@ import (
 	"net"
 	"ngrok/cache"
 	"ngrok/log"
+	"os"
 	"sync"
 	"time"
 )
@@ -81,7 +82,7 @@ func (r *TunnelRegistry) Register(url string, t *Tunnel) error {
 	r.Lock()
 	defer r.Unlock()
 
-	if r.tunnels[url] != nil {
+	if r.tunnels[url] != nil && os.Getenv("NGROK_OVERWRITE_TUNNEL") != "1" {
 		return fmt.Errorf("The tunnel %s is already registered.", url)
 	}
 
